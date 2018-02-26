@@ -37,13 +37,7 @@ public class vista extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Login</title>");
-            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/login.css\">");
-            out.println("</head>");
-            out.println("<body>");
+           
             out.println("<form methods=\"post\">");
             out.println("<div id =\"LOGIN\">");
             out.println("<div>");
@@ -64,8 +58,6 @@ public class vista extends HttpServlet {
             out.println("</div>");
             out.println("</div>");
             out.println("</form>");
-            out.println("</body>");
-            out.println("</html>");
         }
         
         

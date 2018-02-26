@@ -33,4 +33,12 @@ public class conexion {
         cnn.rollback();
         cnn.close();
     }
+
+    public static void cerrarCnn(Connection cnn) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public static void reversarCnn(Connection cnn) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }  // Fin Clase conexion
