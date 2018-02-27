@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class conexion {
  public static Connection getConexionDB() throws ClassNotFoundException, SQLException{
         String servidor = "localhost";
-        String nombreDB = "inventario";
+        String nombreDB = "inventario(3)";
         String usuario = "carmen";
         String clave = "12345";
         String puerto = "3306";
