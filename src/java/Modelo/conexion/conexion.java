@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class conexion {
  public static Connection getConexionDB() throws ClassNotFoundException, SQLException{
         String servidor = "localhost";
-        String nombreDB = "inventario(3)";
+        String nombreDB = "inventario";
         String usuario = "carmen";
         String clave = "12345";
         String puerto = "3306";
@@ -35,10 +35,10 @@ public class conexion {
     }
 
     public static void cerrarCnn(Connection cnn) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      //  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public static void reversarCnn(Connection cnn) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }  // Fin Clase conexion

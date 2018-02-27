@@ -24,13 +24,17 @@ public abstract class GenericoSrv extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
               throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        response.setHeader("Cache-Control","no-store,no-cache, must-revalidate");
+        response.addHeader("Cache-Control", "post-check=0, pre-check=0");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
         try (PrintWriter out = response.getWriter()) {
             String err = null;
             HttpSession sesion = request.getSession();
-            if (sesion.getAttribute("usuario") == null && !request.getServletPath().equals("/usuario/login") && !request.getServletPath().equals("/usuario/crear")) {
+            if (sesion.getAttribute("usuario") == null && !request.getServletPath().equals("/usuario/login") && !request.getServletPath().equals("/usuario/crear") && !request.getServletPath().equals("/CrearUsuario") ) {
                 response.sendRedirect("usuario/login");
             } else if (sesion.getAttribute("usuario") != null && (request.getServletPath().equals("/usuario/login"))) {
-                response.sendRedirect(request.getContextPath() + "/home");
+                response.sendRedirect(request.getContextPath() + "/Home");
             }
             err = request.getParameter("e");
             if (err != null) {
@@ -62,12 +66,12 @@ public abstract class GenericoSrv extends HttpServlet {
                             + "		<a href=\"#\">P3</a>  \n"
                             + "		<a href=\"#\">P4</a>  \n"
                             + "		<a href=\"#\">P5</a>  \n"
-                            + "		<a href=\"" + request.getContextPath() + "/cerrarSesion" + "\">Cerrar Sesion</a>  \n"
+                            + "		<a href=\"" + request.getContextPath() + "/CerrarSesion" + "\">Cerrar Sesion</a>  \n"
                             + "	</div>");
                 }
                 
                 procesarServlet(out, cnn, request.getServletPath(), request, response);
-                conexion.cerrarCnn(cnn);
+                conexion.cerrarConexion(cnn);
             } catch (AppException e) {
                 //e.printStackTrace();
                 //out.print("<script>alert(\"Error de Ejecucion\"" + e.getMessage() + ");</script>");
@@ -87,40 +91,21 @@ public abstract class GenericoSrv extends HttpServlet {
             HttpServletRequest request,
             HttpServletResponse response) throws AppException, Exception;
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+   
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+ 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+   
     @Override
     public String getServletInfo() {
         return "Short description";
