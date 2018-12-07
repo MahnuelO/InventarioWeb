@@ -1,9 +1,12 @@
 package Modelo.dao;
+
 import Modelo.vo.Factura;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +26,7 @@ Connection cnn;
     public void insertar(Factura vo) throws SQLException{
         PreparedStatement sentencia = 
                 cnn.prepareStatement(
-                        "INSERT INTO factura (fechafactura,tipofactura,valorunitario,valortotal,descuento,detalles,idempleado,devolucion) "
+                        "INSERT INTO factura ( fechafactura , tipofactura, valorunitario, valortotal, descuento, detalles, idempleado, devolucion) "
                 + "VALUES(?,?,?,?,?,?,?,?)");
         sentencia.setDate(1, new java.sql.Date(vo.getFechafactura().getTime()));
         sentencia.setString(2, vo.getTipofactura());
@@ -74,7 +77,7 @@ Connection cnn;
             voTemp.setValorunitario(resultado.getInt("valorunitario"));
             voTemp.setValortotal(resultado.getInt("valortotal"));
             voTemp.setDescuento(resultado.getDouble("descuento"));
-            voTemp.setDetalles(resultado.getString("detales"));
+            voTemp.setDetalles(resultado.getString("detalles"));
             voTemp.setDevolucion(resultado.getDouble("devolucion"));
             listaFactura.add(voTemp);
         }
@@ -103,4 +106,51 @@ Connection cnn;
             return null;
         }
         }
+         
+          public List<Factura> consultarnombre(String nombre) throws SQLException {
+        List<Factura> listaEmpleado = new ArrayList<>();
+
+        PreparedStatement sentencia = cnn.prepareStatement("SELECT * FROM factura");
+        ResultSet resultado = sentencia.executeQuery();
+        while (resultado.next()) {
+            Factura voTemp = new Factura();
+           voTemp.setFechafactura(resultado.getDate("fechafactura"));
+            voTemp.setTipofactura(resultado.getString("tipofactura"));
+            voTemp.setValorunitario(resultado.getInt("valorunitario"));
+            voTemp.setValortotal(resultado.getInt("valortotal"));
+            voTemp.setDescuento(resultado.getDouble("descuento"));
+            voTemp.setDetalles(resultado.getString("detalles"));
+            voTemp.setDevolucion(resultado.getDouble("devolucion"));
+
+            listaEmpleado.add(voTemp);
+        }
+        if (listaEmpleado.size() > 0) {
+            return listaEmpleado;
+        } else {
+            return null;
+        } //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Factura queryNombre(String tipofactura) throws SQLException, ParseException {
+        PreparedStatement sentencia = cnn.prepareStatement("SELECT * FROM factura WHERE tipofactura=?");
+        sentencia.setString(1, tipofactura);
+        ResultSet resultado = sentencia.executeQuery();
+        if (resultado.next()) {
+            return getVo(resultado);
+        }
+        return null;
+    }
+
+    public Factura getVo(ResultSet resultado) throws SQLException, ParseException {
+        Factura vot = new Factura();
+     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+         vot.setFechafactura(formato.parse(resultado.getString("fechafactura")));
+            vot.setTipofactura(resultado.getString("tipofactura"));
+            vot.setValorunitario(resultado.getInt("valorunitario"));
+            vot.setValortotal(resultado.getInt("valortotal"));
+            vot.setDescuento(resultado.getDouble("descuento"));
+            vot.setDetalles(resultado.getString("detalles"));
+            vot.setDevolucion(resultado.getDouble("devolucion"));
+        return vot;
+    }
 }  // Fin Clase FacturaDAO

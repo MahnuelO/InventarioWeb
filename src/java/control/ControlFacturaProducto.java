@@ -3,6 +3,9 @@ import Modelo.dao.FacturaProductoDAO;
 import Modelo.vo.FacturaProducto;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.List;
+import utils.AppException;
 
 /**
  *
@@ -17,23 +20,21 @@ public class ControlFacturaProducto {
         this.dao = new FacturaProductoDAO(cnn);
     }
     
-    public boolean insertar(FacturaProducto vo){
-        if(vo.getSubtotal()!= 0 
-                || vo.getSubtotal()==0
-                || vo.getCantidadtotal()!=0 
-                || vo.getCantidadtotal()==0){
-               
-            return false;
-        }else{
-            try {
-                dao.insertar(vo);
-                return true;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                return false;
+     public void insertar(FacturaProducto vo) throws AppException{
+        try {
+            if(!Integer.toString(vo.getCantidadtotal()).isEmpty()){
+            } else {
+                throw new AppException("Campo cantidad total incompleto");
             }
+            if(dao.queryNombre(vo.getCantidadtotal()) != null){
+                throw new AppException("Detalle Factura ya existe");
+            }
+            dao.insertar(vo);
+        } catch (Exception e) {
+            throw new AppException(e);
         }
     }
+
     
      public boolean modificar(FacturaProducto vo){
         if(vo.getCantidadtotal()!= 0 || vo.getCantidadtotal()==0
@@ -50,5 +51,23 @@ public class ControlFacturaProducto {
             }
         }
         
+    }
+     
+   public List<FacturaProducto> consultar(){
+        try {
+            return dao.consultar();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+    
+     public FacturaProducto consultarIdFacturaProducto(int idfacturaproducto) throws ParseException{
+        try {
+            return dao.consultaridFacturaProducto(idfacturaproducto);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 }  // Fin Clase ControlFacturaProducto

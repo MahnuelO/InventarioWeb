@@ -11,7 +11,7 @@ public class Producto {
     private String nombre;
     private int cantidadp;
     private String tipop;
-    private double preciop;
+    private int preciop;
     private Date fecharegistro;
     private String descripcion;
 
@@ -47,11 +47,11 @@ public class Producto {
         this.tipop = tipop;
     }
 
-    public double getPreciop() {
+    public int getPreciop() {
         return preciop;
     }
 
-    public void setPreciop(double preciop) {
+    public void setPreciop(int preciop) {
         this.preciop = preciop;
     }
 

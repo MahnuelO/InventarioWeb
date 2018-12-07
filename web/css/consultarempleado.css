@@ -5,9 +5,8 @@ body{
 
 #ConsultarEmpleado{
 	margin: 0 auto;
-	border: 2px solid #000;
-	padding: 3em;
-	max-width: 35%;
+	padding: 10em;
+        max-width: 48%;
 }
 
 #ConsultarEmpleado div{

@@ -32,7 +32,7 @@ public class CrearUsuario extends GenericoSrv {
 
         switch (urlServlet) {
             case "/CrearUsuario":
-                String idusuar = request.getParameter("idusuario");
+                
                 String nom = request.getParameter("nombre");
                 String clav = request.getParameter("clave");
                 if ( (nom != null) && (clav != null)) {
@@ -50,14 +50,11 @@ public class CrearUsuario extends GenericoSrv {
                 }
 
                 out.println("<form methods=\"POST\">\n"
-                        + "      	<div id=\"IngresarEmpleado\">\n"
+                        + "      	<div id=\"IngresarUsuario\">\n"
                         + "      		<div>\n"
                         + "      			<label for=\"titulo\"> REGISTRO USUARIO </label>\n"
                         + "      		</div>\n"
-                        + "               <div>\n"
-                        + "      			<label for=\"idusuario\">Id Usuario :</label>\n"
-                        + "      			<input type=\"text\" id=\"idusuario\" name=\"idusuario\">\n"
-                        + "      		</div>\n"
+                
                         + "             <div>\n"
                         + "      			<label for=\"nombre\">Nombre :</label>\n"
                         + "      			<input type=\"text\" id=\"nombre\" name=\"nombre\">\n"

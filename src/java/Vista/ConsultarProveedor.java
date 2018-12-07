@@ -5,53 +5,59 @@
  */
 package Vista;
 
+import Modelo.conexion.conexion;
+import Modelo.vo.Proveedor;
+import control.ControlProveedor;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import utils.AppException;
 
 /**
  *
- * @author Usuario
+ * @author Mahnuel
  */
 @WebServlet(name = "ConsultarProveedor", urlPatterns = {"/ConsultarProveedor"})
-public class ConsultarProveedor extends HttpServlet {
+public class ConsultarProveedor extends GenericoSrv {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        Connection cnn = null;
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
+            try {
+                cnn = conexion.getConexionDB();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(ConsultarProveedor.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultarProveedor.class.getName()).log(Level.SEVERE, null, ex);
+            }
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>ConsultarProveedor</title>");   
-            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/consultarproveedor.css\">");
+            out.println("<title>ConsultarProveedor</title>");
+            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/consultarempleado.css\">");
             out.println("</head>");
             out.println("<body>");
-            out.println(" <form methods=\"POST\">");
+            out.println("<form method=\"POST\">");
             out.println("<div id=\"ConsultarProveedor\">");
             out.println("<div>");
-            out.println("<label for=\"titulo\"> CONSULTAR PROVEEDOR </label>");
+            out.println("<label for=\"titulo\"> CONSULTAR PROVEEDOR</label>");
             out.println("</div>");
             out.println("<div>");
-            out.println("<label for=\"nombre\">Nombre :</label>");
-            out.println("<input type=\"text\" id=\"nombre\" name=\"nombre\">");
             out.println("</div>");
             out.println("<table border=\"2\" cellpadding=\"10\" cellspacing=\"6\">");
-           out.println("<tr>");
+            out.println("<tr>");
+            out.println("<th>Id Proveedor</th>");
             out.println("<th>Nombre</th>");
             out.println("<th>Apellido</th>");
             out.println("<th>Celular</th>");
@@ -60,118 +66,40 @@ public class ConsultarProveedor extends HttpServlet {
             out.println("<th>Direccion Empresa</th>");
             out.println("<th>Fecha Registro</th>");
             out.println("</tr>");
-            out.println("<tr>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("</tr>");
-             out.println("<tr>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("</tr>");
-             out.println("<tr>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("</tr>");
-             out.println("<tr>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("</tr>");
-             out.println("<tr>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("</tr>");
-             out.println("<tr>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("</tr>");
-             out.println("<tr>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("<td>      </td>");
-            out.println("</tr>");
+
+            ControlProveedor cpo = new ControlProveedor(cnn);
+
+            for (Proveedor po : cpo.consultar()) {
+             
+                out.println("<tr>");
+                out.println("<td>" + po.getIdproveedor() + "</td>");
+                out.println("<td>" + po.getNombre() + "</td>");
+                out.println("<td>" + po.getApellido() + "</td>");
+                out.println("<td>" + po.getCelular() + "</td>");
+                out.println("<td>" + po.getCorreo() + "</td>");
+                out.println("<td>" + po.getEmpresa() + "</td>");
+                out.println("<td>" + po.getDireccionempresa() + "</td>");
+                out.println("<td>" + po.getFecharegistro() + "</td>");
+               out.println("<td><a href=\""+request.getContextPath()+"//ActualizarProveedor?id="+po.getIdproveedor()+"\">Actualizar Producto</a>");
+                out.println("</tr>");
+                
+            }
+
+
             out.println("</table>");
             out.println("<div>");
-            out.println("<input class=\"botones\" type=\"submit\" id=\"btnConsultar\" value=\"Consultar\">");
-            out.println("<input class=\"botones\" type=\"submit\" id=\"btnMenu\" value=\"Menu\">");
+//            out.println("<input class=\"botones\" type=\"submit\" id=\"btnConsultar\" value=\"Consultar\">");
+//            out.println("<input class=\"botones\" type=\"submit\" id=\"btnMenu\" value=\"Menu\">");
             out.println("</div>");
             out.println("</div>");
             out.println("</form>");
-            out.println("</body>");
-            out.println("</html>");
+
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+    public void procesarServlet(PrintWriter out, Connection cnn, String urlServlet, HttpServletRequest request, HttpServletResponse response) throws AppException, Exception {
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }

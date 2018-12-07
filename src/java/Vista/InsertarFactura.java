@@ -5,124 +5,106 @@
  */
 package Vista;
 
+import Modelo.vo.Factura;
+import control.ControlFactura;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import utils.AppException;
 
 /**
  *
- * @author Usuario
+ * @author MAHNUEL
  */
-@WebServlet(name = "Factura", urlPatterns = {"/Factura"})
-public class InsertarFactura extends HttpServlet {
+@WebServlet(name = "InsertarFactura", urlPatterns = {"/InsertarFactura"})
+public class InsertarFactura extends GenericoSrv {
+    
+    Connection cnn = null;
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Insertar Factura</title>"); 
-            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/factura.css\">");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<form methods=\"POST\">");
-            out.println("<div id=\"InsertarFactura\">");
-            out.println("<div>");
-            out.println("<label for=\"titulo\"> INSERTAR FACTURA </label>");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"fechafactura\">Fecha de Factura :</label>");
-            out.println("<input type=\"text\" id=\"fechafactura\" name=\"fechafactura\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"tipoFactura\">Tipo de Factura :</label>");
-            out.println("<input type=\"text\" id=\"tipoFactura\" name=\"tipoFactura\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"valorUnitaro\">Valor Unitario :</label>");
-            out.println("<input type=\"text\" id=\"valorUnitaro\" name=\"valorUnitaro\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"valorTotal\">Valor Total :</label>");
-            out.println("<input type=\"text\" id=\"valorTotal\" name=\"valorTotal\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"descuento\">Descuento :</label>");
-            out.println("<input type=\"text\" id=\"descuento\" name=\"descuento\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"detalles\">Detalles :</label>");
-            out.println("<input type=\"text\" id=\"detalles\" name=\"detalles\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"devolucion\">Devolucion :</label>");
-            out.println("<input type=\"text\" id=\"devolucion\" name=\"devolucion\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<input class=\"botones\" type=\"reset\" id=\"btnCancelar\" value=\"Cancelar\">");
-            out.println("<input class=\"botones\" type=\"submit\" id=\"btnAceptar\" value=\"Aceptar\">");
-            out.println("<input class=\"botones\" type=\"submit\" id=\"btnMenu\" value=\"Menu\">");
-            out.println("</div>");
-            out.println("</div>");
-            out.println("</form>");
-            out.println("</body>");
-            out.println("</html>");
+    public void procesarServlet(PrintWriter out, Connection cnn, String urlServlet, HttpServletRequest request, HttpServletResponse response) throws AppException, Exception{
+    
+        switch (urlServlet){
+            case "/InsertarFactura":
+                String ff = request.getParameter("fechafactura");
+                String tf = request.getParameter("tipofactura");
+                String vu = request.getParameter("valorunitario");
+                String vt = request.getParameter("valortotal");
+                String de = request.getParameter("descuento");
+                String det = request.getParameter("detalles");
+                String ie = request.getParameter("idempleado");
+                String dev = request.getParameter("devolucion");
+                if ((ff != null) && (tf != null) && (vu != null) && (vt != null) && (de != null) && (det != null) && (ie != null) && (dev != null)) {
+                    Factura vo = new Factura();
+                    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+                    vo.setFechafactura(formato.parse(ff));
+                    vo.setTipofactura(tf);
+                    vo.setValorunitario(Integer.parseInt(vu));
+                    vo.setValortotal(Integer.parseInt(vt));
+                    vo.setDescuento(Double.parseDouble(de));
+                    vo.setDetalles(det);
+                    vo.setIdempleado(Integer.parseInt(ie));
+                    vo.setDevolucion(Double.parseDouble(dev));
+                    ControlFactura factura = new ControlFactura(cnn);
+                    factura.insertar(vo);
+                    if (vo != null) {
+                        HttpSession sesion = request.getSession();
+                        sesion.setAttribute("factura", vo);
+                        response.sendRedirect(request.getContextPath()+ "/Home");
+                        
+                    }
+                    
+                }
+             out.println("<form methods=\"POST\">"
+                        + "<div id=\"IngresarFactura\">"
+                        + "<div>"
+                        + "<label for=\"titulo\"> INGRESAR FACTURA </label>"
+                        + "</div>"
+                        + "<div>"
+                        + "<label for=\"tipofactura\">Tipo Factura :</label>"
+                        + "<input type=\"text\" id=\"tipofactura\" name=\"tipofactura\">"
+                        + "</div>"
+                        + "<div>"
+                        + "<label for=\"fechafactura\">Fecha de Registro :</label>"
+                        + "<input type=\"text\" id=\"fechafactura\" name=\"fechafactura\">"
+                        + "</div>"
+                        + "<div>"
+                        + "<label for=\"valorunitario\">Valor unitario :</label>"
+                        + "<input type=\"text\" id=\"valorunitario\" name=\"valorunitario\">"
+                        + "</div>"
+                        + "<div>"
+                        + "<label for=\"valortotal\">Valor Total :</label>"
+                        + "<input type=\"text\" id=\"valortotal\" name=\"valortotal\">"
+                        + "</div>"
+                        + "<div>"
+                        + "<label for=\"descuento\">Descuento :</label>"
+                        + "<input type=\"text\" id=\"descuento\" name=\"descuento\">"
+                        + "</div>"
+                        + "<div>"
+                        + "<label for=\"detalles\">Detalles :</label>"
+                        + "<input type=\"text\" id=\"detalles\" name=\"detalles\">"
+                        + "</div>"
+                         + "<div>"
+                        + "<label for=\"idempleado\">Id Empleado :</label>"
+                        + "<input type=\"text\" id=\"idempleado\" name=\"idempleado\">"
+                        + "</div>"
+                        + "<div>"
+                        + "<label for=\"devolucion\">Devolucion :</label>"
+                        + "<input type=\"text\" id=\"devolucion\" name=\"devolucion\">"
+                        + "</div>"
+                        + "<div>"
+                        + "<input class=\"botones\" type=\"reset\" id=\"btnCancelar\" value=\"Cancelar\">"
+                        + "<input class=\"botones\" type=\"submit\" id=\"btnAceptar\" value=\"Aceptar\">"
+                        + "</div>"
+                        + "</div>"
+                        + "</form>");
+                break;
         }
     }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

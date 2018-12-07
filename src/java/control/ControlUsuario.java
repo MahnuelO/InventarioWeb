@@ -52,7 +52,7 @@ public class ControlUsuario {
     public void delete(Usuario vo) throws AppException{
         try {
             if(vo.getIdusuario() != 0){
-                throw new AppException("Usuario no reconose");
+                throw new AppException("Usuario no reconoce");
             }
             dao.update(vo);
         } catch (Exception e) {

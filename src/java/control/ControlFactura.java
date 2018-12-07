@@ -3,6 +3,8 @@ import Modelo.dao.FacturaDAO;
 import Modelo.vo.Factura;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
+import utils.AppException;
 
 /**
  *
@@ -17,23 +19,18 @@ public class ControlFactura {
         this.dao = new FacturaDAO(cnn);
     }
     
-    public boolean insertar(Factura vo){
-        if(vo.getTipofactura()== null 
-                || vo.getTipofactura().isEmpty()
-                || vo.getDetalles()== null 
-                || vo.getDetalles().isEmpty()){
-               
-            return false;
-        }else{
-            try {
-                dao.insertar(vo);
-                return true;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                return false;
+    public void insertar(Factura vo) throws AppException{
+        try {
+            if(vo.getTipofactura().isEmpty()){
+                throw new AppException("Campo Tipo Factura incompleto");
             }
+            if(dao.queryNombre(vo.getTipofactura()) != null){
+                throw new AppException("Factura ya existe");
+            }
+            dao.insertar(vo);
+        } catch (Exception e) {
+            throw new AppException(e);
         }
-        
     }
      public boolean modificar(Factura vo){
         if(vo.getTipofactura()== null || vo.getTipofactura().isEmpty()
@@ -52,11 +49,12 @@ public class ControlFactura {
         
     }
 
-//    public boolean insertar(Factura vo) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//
-//    public boolean modificar(Factura vo) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
+public List<Factura> consultar(){
+        try {
+            return dao.consultar();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
 }  // Fin Clase ControlFactura

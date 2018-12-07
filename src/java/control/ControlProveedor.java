@@ -1,8 +1,12 @@
 package control;
 import Modelo.dao.ProveedorDAO;
+import Modelo.vo.Usuario;
 import Modelo.vo.Proveedor;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.List;
+import utils.AppException;
 
 /**
  *
@@ -18,25 +22,21 @@ public class ControlProveedor {
         this.dao = new ProveedorDAO(cnn);
     }
     
-    public boolean insertar(Proveedor vo){
-        if(vo.getNombre()== null 
-                || vo.getNombre().isEmpty()
-                || vo.getApellido()== null 
-                || vo.getCelular().isEmpty()
-                || vo.getCorreo()== null 
-                || vo.getEmpresa().isEmpty()){
-            return false;
-        }else{
-            try {
-                dao.insertar(vo);
-                return true;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                return false;
+    
+    public void insertar(Proveedor vo) throws AppException{
+        try {
+            if(vo.getNombre().isEmpty()){
+                throw new AppException("Campo Nombre incompleto");
             }
+            if(dao.queryNombre(vo.getNombre()) != null){
+                throw new AppException("Proveedor ya existe");
+            }
+            dao.insertar(vo);
+        } catch (Exception e) {
+            throw new AppException(e);
         }
-        
     }
+
     
    public boolean modificar(Proveedor vo){
         if(vo.getNombre()== null || vo.getNombre().isEmpty()
@@ -54,5 +54,25 @@ public class ControlProveedor {
             }
         }
         
+    }
+   
+   
+     
+    public List<Proveedor> consultar(){
+        try {
+            return dao.consultar();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+    
+     public Proveedor consultarIdproveedor(int idproveedor) throws ParseException{
+        try {
+            return dao.consultaridProveedor(idproveedor);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 }  // Fin Clase ControlProveedor

@@ -28,6 +28,7 @@ public class UsuarioDAO {
         int i = 1;
         sentencia.setString(i++, vo.getNombre());
         sentencia.setString(i++, vo.getClave());
+       
         sentencia.executeUpdate();
     }
 

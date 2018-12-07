@@ -5,121 +5,99 @@
  */
 package Vista;
 
+import Modelo.vo.Empleado;
+import control.ConntrolEmpleado;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import utils.AppException;
 
 /**
  *
  * @author Usuario
  */
 @WebServlet(name = "insertarEmpleado", urlPatterns = {"/insertarEmpleado"})
-public class insertarEmpleado extends HttpServlet {
+public class insertarEmpleado extends GenericoSrv {
+Connection cnn = null;
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Ingresar Empleado</title>"); 
-            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/empleado.css\">");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<form methods=\"POST\">");
-            out.println("<div id=\"IngresarEmpleado\">");
-            out.println("<div>");
-            out.println("<label for=\"titulo\"> INGRESAR EMPLEADO </label>");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"nombre\">Nombre :</label>");
-            out.println("<input type=\"text\" id=\"nombre\" name=\"nombre\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"apellido\">Apellido :</label>");
-            out.println("<input type=\"text\" id=\"apellido\" name=\"apellido\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"celular\">Celular :</label>");
-            out.println("<input type=\"text\" id=\"celular\" name=\"celular\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"direccion\">Direccion :</label>");
-            out.println("<input type=\"text\" id=\"direccion\" name=\"direccion\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"correo\">Correo :</label>");
-            out.println("<input type=\"text\" id=\"correo\" name=\"correo\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"cargo\">Cargo :</label>");
-            out.println("<input type=\"text\" id=\"cargo\" name=\"cargo\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<input class=\"botones\" type=\"reset\" id=\"btnCancelar\" value=\"Cancelar\">");
-            out.println("<input class=\"botones\" type=\"submit\" id=\"btnAceptar\" value=\"Aceptar\">");
-            out.println("<input class=\"botones\" type=\"submit\" id=\"btnMenu\" value=\"Menu\">");
-            out.println("</div>");
-            out.println("</div>");
-            out.println("</form>");
-            out.println("</body>");
-            out.println("</html>");
+    public void procesarServlet(PrintWriter out, Connection cnn, String urlServlet, HttpServletRequest request, HttpServletResponse response) throws AppException, Exception {
+
+        switch (urlServlet) {
+            case "/insertarEmpleado":
+                String nom = request.getParameter("nombre");
+                String ape = request.getParameter("apellido");
+                String cel = request.getParameter("celular");
+                String dir = request.getParameter("direccion");
+                String corr = request.getParameter("correo");
+                String car = request.getParameter("cargo");
+                if ( (nom != null) && (ape != null)&&(cel != null) && (dir != null)&&(corr != null) && (car != null)) {
+                    Empleado vo = new Empleado();                    
+                    vo.setNombre(nom);
+                    vo.setApellido(ape);
+                    vo.setCelular(car);
+                    vo.setDireccion(dir);
+                    vo.setCorreo(corr);
+                    vo.setCargo(car);
+                    ConntrolEmpleado empleado = new ConntrolEmpleado(cnn);
+                    empleado.insertar(vo);
+                      if (vo != null) {
+                        HttpSession sesion = request.getSession();
+                        sesion.setAttribute("empleado", vo);
+                        response.sendRedirect(request.getContextPath() + "/Home");
+                    }
+
+                }
+                out.println("<form methods=\"POST\">"
+            + "<div id=\"IngresarEmpleado\">"
+            + "<div>"
+            + "<label for=\"titulo\"> INGRESAR EMPLEADO </label>"
+            + "</div>"
+            + "<div>"
+            + "<label for=\"nombre\">Nombre :</label>"
+            + "<input type=\"text\" id=\"nombre\" name=\"nombre\">"
+            + "</div>"
+            + "<div>"
+            + "<label for=\"apellido\">Apellido :</label>"
+            + "<input type=\"text\" id=\"apellido\" name=\"apellido\">"
+            + "</div>"
+            + "<div>"
+            + "<label for=\"celular\">Celular :</label>"
+            + "<input type=\"text\" id=\"celular\" name=\"celular\">"
+            + "</div>"
+            + "<div>"
+            + "<label for=\"direccion\">Direccion :</label>"
+            + "<input type=\"text\" id=\"direccion\" name=\"direccion\">"
+            + "</div>"
+            + "<div>"
+            + "<label for=\"correo\">Correo :</label>"
+            + "<input type=\"text\" id=\"correo\" name=\"correo\">"
+            + "</div>"
+            + "<div>"
+            + "<label for=\"cargo\">Cargo :</label>"
+            + "<input type=\"text\" id=\"cargo\" name=\"cargo\">"
+            + "</div>"
+            + "<div>"
+            + "<input class=\"botones\" type=\"reset\" id=\"btnCancelar\" value=\"Cancelar\">"
+            + "<input class=\"botones\" type=\"submit\" id=\"btnAceptar\" value=\"Aceptar\">"
+            + "<input class=\"botones\" type=\"submit\" id=\"btnMenu\" value=\"Menu\">"
+            + "</div>"
+            + "</div>"
+            + "</form>");
+                 break;
+        }
+
+            
+            
         }
          
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
-}

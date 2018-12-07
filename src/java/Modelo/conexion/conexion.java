@@ -12,7 +12,7 @@ public class conexion {
  public static Connection getConexionDB() throws ClassNotFoundException, SQLException{
         String servidor = "localhost";
         String nombreDB = "inventario";
-        String usuario = "carmen";
+        String usuario = "Manuel";
         String clave = "12345";
         String puerto = "3306";
         

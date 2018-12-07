@@ -1,120 +1,102 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Vista;
 
+
+import Modelo.vo.Proveedor;
+import control.ControlProveedor;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import utils.AppException;
 
 /**
  *
  * @author Usuario
  */
 @WebServlet(name = "Proveedor", urlPatterns = {"/Proveedor"})
-public class InsertarProveedor extends HttpServlet {
+public class InsertarProveedor extends GenericoSrv {
 
-    
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Insertar Proveedor</title>"); 
-            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/proveedor.css\">");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<form methods=\"POST\">");
-            out.println("<div id=\"IngresarProveedor\">");
-            out.println("<div>");
-            out.println("<label for=\"titulo\"> INGRESAR PROVEEDOR </label>");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"nombre\">Nombre :</label>");
-            out.println("<input type=\"text\" id=\"nombre\" name=\"nombre\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"apellido\">Apellido :</label>");
-            out.println("<input type=\"text\" id=\"apellido\" name=\"apellido\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"celular\">Celular :</label>");
-            out.println("<input type=\"text\" id=\"celular\" name=\"celular\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"correo\">Correo :</label>");
-            out.println("<input type=\"text\" id=\"correo\" name=\"correo\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"empresa\">Empresa :</label>");
-            out.println("<input type=\"text\" id=\"empresa\" name=\"empresa\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"direccion empresa\">Direccion Empresa :</label>");
-            out.println("<input type=\"text\" id=\"direccion empresa\" name=\"direccion empresa\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<label for=\"fecha registro\">Fecha de Registro :</label>");
-            out.println("<input type=\"text\" id=\"fecha registro\" name=\"fecha registro\">");
-            out.println("</div>");
-            out.println("<div>");
-            out.println("<input class=\"botones\" type=\"reset\" id=\"btnCancelar\" value=\"Cancelar\">");
-            out.println("<input class=\"botones\" type=\"submit\" id=\"btnAceptar\" value=\"Aceptar\">");
-            out.println("<input class=\"botones\" type=\"submit\" id=\"btnMenu\" value=\"Menu\">");
-            out.println("</div>");
-            out.println("</div>");
-            out.println("</form>");
-            out.println("</body>");
-            out.println("</html>");
+    Connection cnn = null;
+
+    public void procesarServlet(PrintWriter out, Connection cnn, String urlServlet, HttpServletRequest request, HttpServletResponse response) throws AppException, Exception {
+
+        switch (urlServlet) {
+            case "/Proveedor":
+                String nom = request.getParameter("nombre");
+                String ape = request.getParameter("apellido");
+                String cel = request.getParameter("celular");
+                String corr = request.getParameter("correo");
+                String emp  = request.getParameter("empresa");
+                String dire = request.getParameter("direccionempresa");
+             String fe = request.getParameter("fecharegistro");
+                if ((nom != null) && (ape != null) && (cel != null) && (corr != null) && (emp != null) && (dire != null) /*&& (fe != null)*/) {
+                    Proveedor vo = new Proveedor();
+                    vo.setNombre(nom);
+                    vo.setApellido(ape);
+                    vo.setCelular(cel);
+                    vo.setCorreo(corr);
+                    vo.setEmpresa(emp);
+                    vo.setDireccionempresa(dire);
+                    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+                    vo.setFecharegistro(formato.parse(fe));
+                    ControlProveedor proveedor = new ControlProveedor(cnn);
+                    proveedor.insertar(vo);
+                    if (vo != null) {
+                        HttpSession sesion = request.getSession();
+                        sesion.setAttribute("proveedor", vo);
+                        response.sendRedirect(request.getContextPath() + "/Home");
+                    }
+ 
+                }
+                out.println("<form methods=\"POST\">"
+                        + "<div id=\"IngresarEmpleado\">"
+                        + "<div>"
+                        + "<label for=\"titulo\"> INGRESAR PROVEEDOR </label>"
+                        + "</div>"
+                        + "<div>"
+                        + "<label for=\"nombre\">Nombre :</label>"
+                        + "<input type=\"text\" id=\"nombre\" name=\"nombre\">"
+                        + "</div>"
+                        + "<div>"
+                        + "<label for=\"apellido\">Apellido :</label>"
+                        + "<input type=\"text\" id=\"apellido\" name=\"apellido\">"
+                        + "</div>"
+                        + "<div>"
+                        + "<label for=\"celular\">Celular :</label>"
+                        + "<input type=\"text\" id=\"celular\" name=\"celular\">"
+                        + "</div>"
+                        + "<div>"
+                        + "<label for=\"correo\">Correo :</label>"
+                        + "<input type=\"text\" id=\"correo\" name=\"correo\">"
+                        + "</div>"
+                        + "<div>"
+                        + "<label for=\"empresa\">Empresa :</label>"
+                        + "<input type=\"text\" id=\"empresa\" name=\"empresa\">"
+                        + "</div>"
+                        + "<div>"
+                        + "<label for=\"direccionempresa\">Direccion Empresa :</label>"
+                        + "<input type=\"text\" id=\"direccionempresa\" name=\"direccionempresa\">"
+                        + "</div>"
+                        + "<div>"
+                        + "<label for=\"fecharegistro\">Fecha de Registro :</label>"
+                        + "<input type=\"text\" id=\"fecharegistro\" name=\"fecharegistro\">"
+                        + "</div>"
+                        + "<div>"
+                        + "<input class=\"botones\" type=\"reset\" id=\"btnCancelar\" value=\"Cancelar\">"
+                        + "<input class=\"botones\" type=\"submit\" id=\"btnAceptar\" value=\"Aceptar\">"
+                        + "</div>"
+                        + "</div>"
+                        + "</form>");
+                break;
         }
-    }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
     }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }

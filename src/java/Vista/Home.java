@@ -33,6 +33,7 @@ public class Home extends GenericoSrv {
                 HttpSession sesion = request.getSession();
                 Usuario vo = (Usuario)sesion.getAttribute("usuario");
                 out.println("<h1>HOME "+vo.getNombre()+"</h1>");
+               
                 break;
         }
 
